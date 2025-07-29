@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Moy-Den — психо-дневник</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f6f7fb;
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.05);
+    }
+    h1 {
+      text-align: center;
+    }
+    .moods button {
+      font-size: 30px;
+      margin: 0 10px;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: none;
+    }
+    button.submit {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Moy-Den</h1>
+  <p>Как ты сегодня?</p>
+
+  <div class="moods">
+    <button onclick="selectMood('😊')">😊</button>
+    <button onclick="selectMood('😐')">😐</button>
+    <button onclick="selectMood('😢')">😢</button>
+    <button onclick="selectMood('😠')">😠</button>
+  </div>
+
+  <textarea id="comment" placeholder="Запиши, что было сегодня..."></textarea>
+  <button class="submit" onclick="submitEntry()">Сохранить</button>
+
+  <script>
+    const supabaseUrl = 'https://xhrktuijikwvrjgwvrml.supabase.co'
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhocmt0dWlqaWt3dnJqZ3d2cm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NTY2ODEsImV4cCI6MjA2OTMzMjY4MX0.6Xgof7gb-HvPf5IKa63doK7Lj2zwQ3_cvfDSx52-Oos'
+
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+
+    let selectedMood = null;
+
+    function selectMood(mood) {
+      selectedMood = mood;
+      alert('Ты выбрал: ' + mood)
+    }
+
+    async function submitEntry() {
+      const comment = document.getElementById('comment').value;
+      if (!selectedMood) {
+        alert('Выбери настроение!')
+        return
+      }
+      const { error } = await supabase.from('entries').insert([
+        { mood: selectedMood, comment: comment }
+      ])
+      if (error) {
+        alert('Ошибка: ' + error.message)
+      } else {
+        alert('Запись сохранена! 🙌')
+        document.getElementById('comment').value = ''
+        selectedMood = null;
+      }
+    }
+  </script>
+
+</body>
+</html>
