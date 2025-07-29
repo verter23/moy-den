@@ -1,3 +1,13 @@
+<!-- Форма для входа -->
+<h2>Вход</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Пароль">
+<button onclick="login()">Войти</button>
+<!-- Форма для регистрации -->
+<h2>Регистрация</h2>
+<input type="email" id="regEmail" placeholder="Email">
+<input type="password" id="regPassword" placeholder="Пароль">
+<button onclick="register()">Регистрация</button>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -5,7 +15,24 @@
   <title>Moy-Den — психо-дневник</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    body {
+    body {<!-- Страница для авторизованных пользователей -->
+<div id="moodForm" style="display:none;">
+  <h1>🧠 Moy-Den</h1>
+  <p>Как ты сегодня?</p>
+
+  <div class="moods">
+    <button onclick="selectMood('😊')">😊</button>
+    <button onclick="selectMood('😐')">😐</button>
+    <button onclick="selectMood('😢')">😢</button>
+    <button onclick="selectMood('😠')">😠</button>
+  </div>
+
+  <textarea id="comment" placeholder="Запиши, что было сегодня..."></textarea>
+  <button class="submit" onclick="submitEntry()">Сохранить</button>
+
+  <!-- Кнопка выхода -->
+  <button onclick="logout()">Выйти</button>
+</div>
       font-family: sans-serif;
       background: #f6f7fb;
       max-width: 480px;
@@ -93,6 +120,87 @@
       }
     }
   </script>
+// Конфигурация Supabase
+const supabaseUrl = 'https://xhrktuijikwvrjgwvrml.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhocmt0dWlqaWt3dnJqZ3d2cm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NTY2ODEsImV4cCI6MjA2OTMzMjY4MX0.6Xgof7gb-HvPf5IKa63doK7Lj2zwQ3_cvfDSx52-Oos';
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+let selectedMood = null;
+
+// Функция для входа
+async function login() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  const { user, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert('Ошибка: ' + error.message);
+  } else {
+    alert('Добро пожаловать, ' + user.email);
+    document.getElementById('moodForm').style.display = 'block';  // Показать форму для настроений
+    document.getElementById('email').value = '';  // Очистить поля
+    document.getElementById('password').value = '';
+  }
+}
+
+// Функция для регистрации
+async function register() {
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPassword').value;
+
+  const { user, error } = await supabase.auth.signUp({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert('Ошибка: ' + error.message);
+  } else {
+    alert('Регистрация прошла успешно! Пожалуйста, подтвердите свою почту.');
+  }
+}
+
+// Функция для выхода
+async function logout() {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    alert('Ошибка выхода: ' + error.message);
+  } else {
+    alert('Выход выполнен!');
+    document.getElementById('moodForm').style.display = 'none';  // Скрыть форму
+  }
+}
+
+// Выбор настроения
+function selectMood(mood) {
+  selectedMood = mood;
+  alert('Ты выбрал: ' + mood);
+}
+
+// Сохранение данных в базу
+async function submitEntry() {
+  const comment = document.getElementById('comment').value;
+  if (!selectedMood) {
+    alert('Выбери настроение!');
+    return;
+  }
+
+  const { error } = await supabase.from('entries').insert([
+    { mood: selectedMood, comment: comment }
+  ]);
+
+  if (error) {
+    alert('Ошибка: ' + error.message);
+  } else {
+    alert('Запись сохранена! 🙌');
+    document.getElementById('comment').value = '';  // Очистить поле комментария
+    selectedMood = null;
+  }
+}
 
 </body>
 </html>
