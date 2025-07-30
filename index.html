@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moy-Den — психо-дневник</title>
   
-  <!-- Подключение библиотеки Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabaseUrl = 'https://xhrktuijikwvrjgwvrml.supabase.co'; 
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhocmt0dWlqaWt3dnJqZ3d2cm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NTY2ODEsImV4cCI6MjA2OTMzMjY4MX0.6Xgof7gb-HvPf5IKa63doK7Lj2zwQ3_cvfDSx52-Oos';
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+</script>
 
   <style>
     body {
@@ -86,9 +90,9 @@
 
   <script>
     // Инициализация Supabase
-    const supabaseUrl = 'https://xhrktuijikwvrjgwvrml.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhocmt0dWlqaWt3dnJqZ3d2cm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NTY2ODEsImV4cCI6MjA2OTMzMjY4MX0.6Xgof7gb-HvPf5IKa63doK7Lj2zwQ3_cvfDSx52-Oos';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseUrl = 'https://xhrktuijikwvrjgwvrml.supabase.co';  // URL Supabase проекта
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhocmt0dWlqaWt3dnJqZ3d2cm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3NTY2ODEsImV4cCI6MjA2OTMzMjY4MX0.6Xgof7gb-HvPf5IKa63doK7Lj2zwQ3_cvfDSx52-Oos';  // Твой Supabase ключ
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);  // Инициализация клиента Supabase
 
     let selectedMood = null;
 
